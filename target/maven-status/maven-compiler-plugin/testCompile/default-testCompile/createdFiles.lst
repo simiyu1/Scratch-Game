@@ -1,1 +1,7 @@
+com/scratchgame/ScratchGameEdgeCasesTest.class
+com/scratchgame/ScratchGameEdgeCasesTest$BonusSymbolTests.class
+com/scratchgame/ScratchGameEdgeCasesTest$ConfigurationValidationTests.class
+com/scratchgame/ScratchGameEdgeCasesTest$RewardCalculationTests.class
+com/scratchgame/ScratchGameEdgeCasesTest$MatrixGenerationTests.class
+com/scratchgame/ScratchGameEdgeCasesTest$WinningCombinationsTests.class
 com/scratchgame/ScratchGameTest.class

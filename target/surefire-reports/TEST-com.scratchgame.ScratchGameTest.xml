@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.scratchgame.ScratchGameTest" time="0.149" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.scratchgame.ScratchGameTest" time="0.046" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -13,7 +13,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="KE"/>
     <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk@17/17.0.14/libexec/openjdk.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/graah/Documents/interview/scratchgame/target/surefire/surefirebooter-20250519183847373_3.jar /Users/graah/Documents/interview/scratchgame/target/surefire 2025-05-19T18-38-47_320-jvmRun1 surefire-20250519183847373_1tmp surefire_0-20250519183847373_2tmp"/>
+    <property name="sun.java.command" value="/Users/graah/Documents/interview/scratchgame/target/surefire/surefirebooter-20250519191126775_3.jar /Users/graah/Documents/interview/scratchgame/target/surefire 2025-05-19T19-11-26_713-jvmRun1 surefire-20250519191126775_1tmp surefire_0-20250519191126775_2tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/Users/graah/Documents/interview/scratchgame/target/test-classes:/Users/graah/Documents/interview/scratchgame/target/classes:/Users/graah/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar:/Users/graah/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar:/Users/graah/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar:/Users/graah/.m2/repository/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar:/Users/graah/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar:/Users/graah/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar:/Users/graah/.m2/repository/commons-cli/commons-cli/1.5.0/commons-cli-1.5.0.jar:/Users/graah/.m2/repository/org/junit/jupiter/junit-jupiter/5.9.2/junit-jupiter-5.9.2.jar:/Users/graah/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.2/junit-jupiter-api-5.9.2.jar:/Users/graah/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/Users/graah/.m2/repository/org/junit/platform/junit-platform-commons/1.9.2/junit-platform-commons-1.9.2.jar:/Users/graah/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/graah/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.9.2/junit-jupiter-params-5.9.2.jar:/Users/graah/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar:/Users/graah/.m2/repository/org/junit/platform/junit-platform-engine/1.9.2/junit-platform-engine-1.9.2.jar:"/>
@@ -29,7 +29,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="/Users/graah/Documents/interview/scratchgame/target/surefire/surefirebooter-20250519183847373_3.jar"/>
+    <property name="surefire.real.class.path" value="/Users/graah/Documents/interview/scratchgame/target/surefire/surefirebooter-20250519191126775_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="17.0.14+0"/>
@@ -57,7 +57,151 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testPlayWithNegativeBet" classname="com.scratchgame.ScratchGameTest" time="0.124"/>
-  <testcase name="testPlayWithValidBet" classname="com.scratchgame.ScratchGameTest" time="0.007"/>
+  <testcase name="testPlayWithNegativeBet" classname="com.scratchgame.ScratchGameTest" time="0.032"/>
+  <testcase name="testPlayWithValidBet" classname="com.scratchgame.ScratchGameTest" time="0.008">
+    <system-out><![CDATA[Checking symbol at [0,0]: B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found winning combinations for symbol B: [same_symbol_3_times]
+Checking symbol at [0,1]: E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found winning combinations for symbol E: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times, same_symbol_6_times]
+Checking symbol at [0,2]: D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Checking symbol at [0,3]: F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found winning combinations for symbol F: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times]
+Checking symbol at [1,0]: D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Found 2 occurrences of symbol D
+Checking symbol at [1,1]: E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found winning combinations for symbol E: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times, same_symbol_6_times]
+Checking symbol at [1,2]: F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found winning combinations for symbol F: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times]
+Checking symbol at [1,3]: E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found winning combinations for symbol E: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times, same_symbol_6_times]
+Checking symbol at [2,0]: E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found winning combinations for symbol E: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times, same_symbol_6_times]
+Checking symbol at [2,1]: B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found winning combinations for symbol B: [same_symbol_3_times]
+Checking symbol at [2,2]: B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found 3 occurrences of symbol B
+Found winning combinations for symbol B: [same_symbol_3_times]
+Checking symbol at [2,3]: F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found winning combinations for symbol F: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times]
+Checking symbol at [3,0]: F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found winning combinations for symbol F: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times]
+Checking symbol at [3,1]: E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found winning combinations for symbol E: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times, same_symbol_6_times]
+Checking symbol at [3,2]: E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found 6 occurrences of symbol E
+Found winning combinations for symbol E: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times, same_symbol_6_times]
+Checking symbol at [3,3]: F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found 5 occurrences of symbol F
+Found winning combinations for symbol F: [same_symbol_3_times, same_symbol_4_times, same_symbol_5_times]
+]]></system-out>
+  </testcase>
   <testcase name="testPlayWithZeroBet" classname="com.scratchgame.ScratchGameTest" time="0.005"/>
 </testsuite>

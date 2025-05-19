@@ -11,8 +11,29 @@ public class ScratchGame {
     private final Random random;
 
     public ScratchGame(GameConfig config) {
+        validateConfig(config);
         this.config = config;
         this.random = new Random();
+    }
+
+    private void validateConfig(GameConfig config) {
+        if (config == null) {
+            throw new IllegalArgumentException("Game configuration cannot be null");
+        }
+        if (config.getRows() <= 0 || config.getColumns() <= 0) {
+            throw new IllegalArgumentException("Matrix dimensions must be positive");
+        }
+        if (config.getSymbols() == null || config.getSymbols().isEmpty()) {
+            throw new IllegalArgumentException("Game must have at least one symbol");
+        }
+        if (config.getWinCombinations() == null || config.getWinCombinations().isEmpty()) {
+            throw new IllegalArgumentException("Game must have at least one winning combination");
+        }
+        if (config.getProbabilities() == null || 
+            config.getProbabilities().getStandardSymbols() == null || 
+            config.getProbabilities().getStandardSymbols().isEmpty()) {
+            throw new IllegalArgumentException("Game must have probability configurations");
+        }
     }
 
     public GameResult play(double betAmount) {
@@ -75,8 +96,16 @@ public class ScratchGame {
                 .findFirst()
                 .orElse(config.getProbabilities().getStandardSymbols().get(0));
 
+        // Validate probability configuration
+        if (probability.getSymbols() == null || probability.getSymbols().isEmpty()) {
+            throw new IllegalStateException("No symbol probabilities defined for position [" + row + "," + col + "]");
+        }
+
         // Calculate total probability
         int totalProbability = probability.getSymbols().values().stream().mapToInt(Integer::intValue).sum();
+        if (totalProbability <= 0) {
+            throw new IllegalStateException("Invalid probability distribution for position [" + row + "," + col + "]");
+        }
         
         // Generate random number
         int randomValue = random.nextInt(totalProbability);
@@ -86,7 +115,11 @@ public class ScratchGame {
         for (Map.Entry<String, Integer> entry : probability.getSymbols().entrySet()) {
             currentSum += entry.getValue();
             if (randomValue < currentSum) {
-                return entry.getKey();
+                String symbol = entry.getKey();
+                if (!config.getSymbols().containsKey(symbol)) {
+                    throw new IllegalStateException("Symbol " + symbol + " not found in configuration");
+                }
+                return symbol;
             }
         }
         
@@ -96,14 +129,20 @@ public class ScratchGame {
 
     private Map<String, List<String>> findWinningCombinations(List<List<String>> matrix) {
         Map<String, List<String>> winningCombinations = new HashMap<>();
+        Set<String> usedPositions = new HashSet<>();
         
         // Check each symbol in the matrix
         for (int row = 0; row < matrix.size(); row++) {
             for (int col = 0; col < matrix.get(row).size(); col++) {
                 String symbol = matrix.get(row).get(col);
+                System.out.println("Checking symbol at [" + row + "," + col + "]: " + symbol);
+                if (!config.getSymbols().containsKey(symbol)) {
+                    throw new IllegalStateException("Invalid symbol found in matrix: " + symbol);
+                }
                 if (config.getSymbols().get(symbol).getType().equals("standard")) {
-                    List<String> combinations = findWinningCombinationsForSymbol(matrix, symbol);
+                    List<String> combinations = findWinningCombinationsForSymbol(matrix, symbol, usedPositions);
                     if (!combinations.isEmpty()) {
+                        System.out.println("Found winning combinations for symbol " + symbol + ": " + combinations);
                         winningCombinations.put(symbol, combinations);
                     }
                 }
@@ -113,44 +152,59 @@ public class ScratchGame {
         return winningCombinations;
     }
 
-    private List<String> findWinningCombinationsForSymbol(List<List<String>> matrix, String symbol) {
+    private List<String> findWinningCombinationsForSymbol(List<List<String>> matrix, String symbol, Set<String> usedPositions) {
         List<String> combinations = new ArrayList<>();
         
-        // Count occurrences of the symbol
-        int count = 0;
-        for (List<String> row : matrix) {
-            for (String s : row) {
-                if (s.equals(symbol)) {
-                    count++;
-                }
-            }
-        }
-        
-        // Check same symbol combinations
+        // Check each win combination
         for (Map.Entry<String, WinCombination> entry : config.getWinCombinations().entrySet()) {
+            String combinationName = entry.getKey();
             WinCombination combination = entry.getValue();
-            if (combination.getWhen().equals("same_symbols") && count >= combination.getCount()) {
-                combinations.add(entry.getKey());
-            }
-        }
-        
-        // Check linear combinations
-        for (Map.Entry<String, WinCombination> entry : config.getWinCombinations().entrySet()) {
-            WinCombination combination = entry.getValue();
-            if (combination.getWhen().equals("linear_symbols")) {
-                for (List<String> area : combination.getCoveredAreas()) {
-                    boolean isWinning = true;
-                    for (String position : area) {
-                        String[] coords = position.split(":");
-                        int r = Integer.parseInt(coords[0]);
-                        int c = Integer.parseInt(coords[1]);
-                        if (!matrix.get(r).get(c).equals(symbol)) {
-                            isWinning = false;
-                            break;
+            
+            if (combination.getWhen().equals("same_symbols")) {
+                // Count occurrences of the symbol
+                int count = 0;
+                for (List<String> row : matrix) {
+                    for (String s : row) {
+                        if (s.equals(symbol)) {
+                            count++;
                         }
                     }
-                    if (isWinning) {
-                        combinations.add(entry.getKey());
+                }
+                System.out.println("Found " + count + " occurrences of symbol " + symbol);
+                
+                if (count >= combination.getCount()) {
+                    combinations.add(combinationName);
+                }
+            } else if (combination.getWhen().equals("linear_symbols")) {
+                // Check each covered area for linear combinations
+                if (combination.getCoveredAreas() != null) {
+                    for (List<String> area : combination.getCoveredAreas()) {
+                        boolean isValid = true;
+                        for (String position : area) {
+                            try {
+                                String[] coords = position.split(":");
+                                if (coords.length != 2) {
+                                    throw new IllegalStateException("Invalid position format: " + position);
+                                }
+                                int row = Integer.parseInt(coords[0]);
+                                int col = Integer.parseInt(coords[1]);
+                                
+                                if (row < 0 || row >= matrix.size() || col < 0 || col >= matrix.get(0).size()) {
+                                    throw new IllegalStateException("Position out of bounds: " + position);
+                                }
+                                
+                                if (!matrix.get(row).get(col).equals(symbol)) {
+                                    isValid = false;
+                                    break;
+                                }
+                            } catch (NumberFormatException e) {
+                                throw new IllegalStateException("Invalid position format: " + position);
+                            }
+                        }
+                        if (isValid) {
+                            combinations.add(combinationName);
+                            break;
+                        }
                     }
                 }
             }
@@ -164,16 +218,37 @@ public class ScratchGame {
             return 0;
         }
 
+        // Validate that win combinations exist in configuration
+        if (config.getWinCombinations() == null || config.getWinCombinations().isEmpty()) {
+            throw new IllegalStateException("Win combinations configuration is missing");
+        }
+
         double totalReward = 0;
         
         for (Map.Entry<String, List<String>> entry : winningCombinations.entrySet()) {
             String symbol = entry.getKey();
             List<String> combinations = entry.getValue();
             
-            double symbolReward = betAmount * config.getSymbols().get(symbol).getRewardMultiplier();
+            Symbol symbolConfig = config.getSymbols().get(symbol);
+            if (symbolConfig == null) {
+                System.out.println("Symbol configuration not found for: " + symbol);
+                throw new IllegalStateException("Symbol configuration not found: " + symbol);
+            }
+            
+            double symbolReward = betAmount * symbolConfig.getRewardMultiplier();
             
             for (String combination : combinations) {
-                symbolReward *= config.getWinCombinations().get(combination).getRewardMultiplier();
+                WinCombination winConfig = config.getWinCombinations().get(combination);
+                if (winConfig == null) {
+                    System.out.println("Win combination configuration not found for: " + combination);
+                    throw new IllegalStateException("Win combination configuration not found: " + combination);
+                }
+                symbolReward *= winConfig.getRewardMultiplier();
+                
+                // Check for overflow
+                if (Double.isInfinite(symbolReward) || Double.isNaN(symbolReward)) {
+                    throw new ArithmeticException("Reward calculation overflow for symbol: " + symbol);
+                }
             }
             
             totalReward += symbolReward;
@@ -183,9 +258,18 @@ public class ScratchGame {
     }
 
     private String applyBonusSymbol(List<List<String>> matrix, double currentReward) {
+        GameConfig.BonusSymbolProbability bonusConfig = config.getProbabilities().getBonusSymbols();
+        if (bonusConfig == null || bonusConfig.getSymbols() == null || bonusConfig.getSymbols().isEmpty()) {
+            return null;
+        }
+
         // Generate random bonus symbol based on probabilities
-        Map<String, Integer> bonusSymbols = config.getProbabilities().getBonusSymbols().getSymbols();
+        Map<String, Integer> bonusSymbols = bonusConfig.getSymbols();
         int totalProbability = bonusSymbols.values().stream().mapToInt(Integer::intValue).sum();
+        if (totalProbability <= 0) {
+            return null;
+        }
+
         int randomValue = random.nextInt(totalProbability);
         
         int currentSum = 0;
@@ -200,10 +284,36 @@ public class ScratchGame {
         
         if (selectedSymbol != null && !selectedSymbol.equals("MISS")) {
             Symbol symbol = config.getSymbols().get(selectedSymbol);
+            if (symbol == null) {
+                throw new IllegalStateException("Bonus symbol configuration not found: " + selectedSymbol);
+            }
+            
+            if (symbol.getImpact() == null) {
+                throw new IllegalStateException("Bonus symbol impact not defined: " + selectedSymbol);
+            }
+            
             if (symbol.getImpact().equals("multiply_reward")) {
+                if (symbol.getRewardMultiplier() <= 0) {
+                    throw new IllegalStateException("Invalid bonus multiplier for symbol: " + selectedSymbol);
+                }
                 currentReward *= symbol.getRewardMultiplier();
+                
+                // Check for overflow
+                if (Double.isInfinite(currentReward) || Double.isNaN(currentReward)) {
+                    throw new ArithmeticException("Bonus reward calculation overflow");
+                }
             } else if (symbol.getImpact().equals("extra_bonus")) {
+                if (symbol.getExtra() < 0) {
+                    throw new IllegalStateException("Invalid extra bonus for symbol: " + selectedSymbol);
+                }
                 currentReward += symbol.getExtra();
+                
+                // Check for overflow
+                if (Double.isInfinite(currentReward) || Double.isNaN(currentReward)) {
+                    throw new ArithmeticException("Bonus reward calculation overflow");
+                }
+            } else {
+                throw new IllegalStateException("Unknown bonus impact type: " + symbol.getImpact());
             }
         }
         
@@ -230,6 +340,9 @@ public class ScratchGame {
             System.exit(1);
         } catch (NumberFormatException e) {
             System.err.println("Invalid betting amount: " + e.getMessage());
+            System.exit(1);
+        } catch (IllegalArgumentException | IllegalStateException | ArithmeticException e) {
+            System.err.println("Game error: " + e.getMessage());
             System.exit(1);
         }
     }
