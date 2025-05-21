@@ -9,11 +9,30 @@ import java.util.*;
 public class ScratchGame {
     private final GameConfig config;
     private final Random random;
+    private final Map<String, WeightedRandomGenerator> symbolGenerators = new HashMap<>();
+    private List<List<String>> testMatrix = null;
 
+    // To improve testing, allows injecting a test matrix. In game, this is not used.
+    public void setTestMatrix(List<List<String>> matrix) {
+        this.testMatrix = matrix;
+    }
+    
     public ScratchGame(GameConfig config) {
         validateConfig(config);
         this.config = config;
         this.random = new Random();
+        
+        // Precompute WeightedRandomGenerators for each position
+        for (GameConfig.StandardSymbolProbability probability : config.getProbabilities().getStandardSymbols()) {
+            String key = probability.getRow() + ":" + probability.getColumn();
+            symbolGenerators.put(key, new WeightedRandomGenerator(probability.getSymbols()));
+        }
+        
+        // Also create one for bonus symbols if they exist
+        if (config.getProbabilities().getBonusSymbols() != null) {
+            symbolGenerators.put("bonus", new WeightedRandomGenerator(
+                config.getProbabilities().getBonusSymbols().getSymbols()));
+        }
     }
 
     private void validateConfig(GameConfig config) {
@@ -73,6 +92,10 @@ public class ScratchGame {
     }
 
     private List<List<String>> generateMatrix() {
+        if (testMatrix != null) {
+            return testMatrix;
+        }
+        
         List<List<String>> matrix = new ArrayList<>();
         
         for (int row = 0; row < config.getRows(); row++) {
@@ -88,43 +111,20 @@ public class ScratchGame {
     }
 
     private String generateSymbolForPosition(int row, int col) {
-        // Find probability configuration for this position
-        GameConfig.StandardSymbolProbability probability = config.getProbabilities()
-                .getStandardSymbols()
-                .stream()
-                .filter(p -> p.getRow() == row && p.getColumn() == col)
-                .findFirst()
-                .orElse(config.getProbabilities().getStandardSymbols().get(0));
-
-        // Validate probability configuration
-        if (probability.getSymbols() == null || probability.getSymbols().isEmpty()) {
-            throw new IllegalStateException("No symbol probabilities defined for position [" + row + "," + col + "]");
-        }
-
-        // Calculate total probability
-        int totalProbability = probability.getSymbols().values().stream().mapToInt(Integer::intValue).sum();
-        if (totalProbability <= 0) {
-            throw new IllegalStateException("Invalid probability distribution for position [" + row + "," + col + "]");
+        String key = row + ":" + col;
+        WeightedRandomGenerator generator = symbolGenerators.get(key);
+        
+        if (generator == null) {
+            // Fallback to default if specific position doesn't have a configuration
+            generator = symbolGenerators.get("0:0");
         }
         
-        // Generate random number
-        int randomValue = random.nextInt(totalProbability);
-        
-        // Find symbol based on probability
-        int currentSum = 0;
-        for (Map.Entry<String, Integer> entry : probability.getSymbols().entrySet()) {
-            currentSum += entry.getValue();
-            if (randomValue < currentSum) {
-                String symbol = entry.getKey();
-                if (!config.getSymbols().containsKey(symbol)) {
-                    throw new IllegalStateException("Symbol " + symbol + " not found in configuration");
-                }
-                return symbol;
-            }
+        String symbol = generator.nextSymbol();
+        if (!config.getSymbols().containsKey(symbol)) {
+            throw new IllegalStateException("Symbol " + symbol + " not found in configuration");
         }
         
-        // This should never happen, but just in case
-        return probability.getSymbols().keySet().iterator().next();
+        return symbol;
     }
 
     private Map<String, List<String>> findWinningCombinations(List<List<String>> matrix) {

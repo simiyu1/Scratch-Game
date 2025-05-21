@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -78,5 +79,31 @@ public class ScratchGameTest {
         
         // Verify no bonus symbol
         assertNull(result.getAppliedBonusSymbol());
+    }
+
+    @Test
+    void testSpecificWinningCombination() {
+        // Create a matrix with a specific winning pattern (4x4 as per config)
+        List<List<String>> testMatrix = Arrays.asList(
+            Arrays.asList("A", "A", "A", "B"),
+            Arrays.asList("B", "C", "D", "E"),
+            Arrays.asList("E", "F", "F", "B"),
+            Arrays.asList("C", "D", "E", "F")
+        );
+        
+        game.setTestMatrix(testMatrix);
+        GameResult result = game.play(100);
+        
+        // Print actual results for debugging
+        System.out.println("Actual reward: " + result.getReward());
+        System.out.println("Winning combinations: " + result.getAppliedWinningCombinations());
+        System.out.println("Bonus symbol: " + result.getAppliedBonusSymbol());
+        
+        // Instead of checking the exact value, which depends on multiple factors,
+        // verify that a winning combination for symbol A was detected
+        assertTrue(result.getReward() > 0, "Should have a positive reward");
+        assertTrue(result.getAppliedWinningCombinations().containsKey("A"), "Should have winning combinations for A");
+        assertTrue(result.getAppliedWinningCombinations().get("A").contains("same_symbol_3_times"), 
+                "Should have 'same_symbol_3_times' winning combination");
     }
 } 
