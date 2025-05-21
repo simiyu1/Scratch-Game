@@ -1,5 +1,7 @@
 # Scratch Game Implementation
 
+[![Coverage Status](https://coveralls.io/repos/github/simiyu1/Scratch-Game/badge.svg?branch=feat/add-coverage-report)](https://coveralls.io/github/simiyu1/Scratch-Game?branch=feat/add-coverage-report)
+
 ## Overview
 This is a Java implementation of a scratch card game that generates a matrix of symbols, calculates winning combinations, and determines rewards based on betting amounts and bonus symbols.
 
