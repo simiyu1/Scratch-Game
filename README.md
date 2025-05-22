@@ -389,3 +389,29 @@ mvn test
 - Test configurations are in `src/test/resources/`
 - Each test category has its own configuration file
 - Edge case tests use specific configurations to test error conditions 
+
+#### Running Tests
+- Run a specific test class:
+    `Runmvn test -Dtest=YourTestClassName`
+- Example
+    `mvn test -Dtest=ScratchGameCalculateRewardTest`
+- Run all tests:
+    `mvn test`
+
+#### Generating Coverage Reports
+- Run the tests first to collect coverage data:
+      ` mvn test`
+- Generate a JaCoCo coverage report:
+      ` mvn jacoco:report`
+This creates a coverage report in target/site/jacoco
+
+#### Viewing Coverage Reports Locally
+- Start a local web server to view the reports:
+      `python3 -m http.server 8000 -d target/site/jacoco`
+- Open a web browser and navigate to:
+      `http://localhost:8000`
+- Navigate through the report:
+  - Click on package names to view classes
+  - Click on classes to view methods and their coverage
+  - Click on method names to view source code with coverage highlighting
+  - To stop the server, press Ctrl+C in the terminal
