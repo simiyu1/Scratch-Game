@@ -231,7 +231,7 @@ public class ScratchGame {
             
             Symbol symbolConfig = config.getSymbols().get(symbol);
             if (symbolConfig == null) {
-                System.out.println("Symbol configuration not found for: " + symbol);
+                //System.out.println("Symbol configuration not found for: " + symbol);
                 throw new IllegalStateException("Symbol configuration not found: " + symbol);
             }
             
@@ -240,7 +240,7 @@ public class ScratchGame {
             for (String combination : combinations) {
                 WinCombination winConfig = config.getWinCombinations().get(combination);
                 if (winConfig == null) {
-                    System.out.println("Win combination configuration not found for: " + combination);
+                    //System.out.println("Win combination configuration not found for: " + combination);
                     throw new IllegalStateException("Win combination configuration not found: " + combination);
                 }
                 symbolReward *= winConfig.getRewardMultiplier();
